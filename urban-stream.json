@@ -1,0 +1,61 @@
+{
+  "_id": "5ea44ae3f79fdf5c781873db",
+  "pipelineId": "9cc81b21-0ca8-4b06-9500-6b4e5f5a3445",
+  "tenantId": "5ade13625558f2c6688d15ce",
+  "description": "Demo",
+  "integrations": [
+    {
+      "name":"Jira"
+    }
+  ],
+  "phases": [
+    {
+      "name": "Planning",
+      "stages": [
+        {
+          "name": "Backlog",
+          "query": "issue.status=Backlog"
+        },
+        {
+          "name": "Selected For Development",
+          "query": "issue.status='Selected for Development'"
+        }
+      ]
+    },
+    {
+      "name": "Development",
+      "stages": [
+        {
+          "name": "In Progress",
+          "query": "issue.status='In Progress' OR (JU.status=open AND JU.labels!='PendingReview')"
+        },
+        
+        {
+          "name": "Done",
+          "query": "issue.status=Done OR JU.status=closed"
+        },
+        {
+          "name": "Build",
+          "query": "build.status=success AND deployment.env!=DEV"
+        }
+      ]
+    },
+    {
+      "name": "Deployment",
+      "stages": [
+        {
+          "name": "DEV",
+          "query": "deployment.env=DEV AND deployment.env!=QA"
+        },
+        {
+          "name": "QA",
+          "query": "deployment.env=QA AND deployment.env!=PROD"
+        },
+        {
+          "name": "PROD",
+          "query": "deployment.env=PROD"
+        }
+      ]
+    }
+  ]
+}
