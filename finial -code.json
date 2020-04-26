@@ -1,0 +1,69 @@
+{
+  "_id": "5ea3fe8bf79fdf603418732f",
+  "pipelineId": "a68f175a-5771-444f-b89c-6a29f1027044",
+  "tenantId": "5ade13625558f2c6688d15ce",
+  "description": null,
+  "query": "",
+  "integrations": [
+    {
+      "name":"Jira"
+    },
+    {
+      "name":"Github"
+    }
+  ],
+  "phases": [
+    {
+      "name": "Planning",
+      "stages": [
+        {
+          "name": "Backlog",
+          "query": "issue.status=Backlog"
+        },
+        {
+          "name": "Selected For Development",
+          "query": "issue.status='Selected for Development'"
+        }
+      ]
+    },
+    {
+      "name": "Development",
+      "stages": [
+        {
+          "name": "In Progress",
+          "query": "issue.status='In Progress' OR (JU.status=open AND JU.labels!='PendingReview')"
+        },
+        
+        {
+          "name": "Done",
+          "query": "issue.status=Done OR JU.status=closed"
+        },
+        {
+          "name": "Total Commit Status",
+          "query": "build.status=success"
+        },
+		{
+          "name": "Pull Request",
+          "query": "pr.status=open"
+        }
+      ]
+    },
+    {
+      "name": "Deployment",
+      "stages": [
+        {
+          "name": "DEV",
+          "query": "deployment.env=DEV"
+        },
+        {
+          "name": "QA",
+          "query": "deployment.env=QA"
+        },
+        {
+          "name": "PROD",
+          "query": "deployment.env=PROD"
+        }
+      ]
+    }
+  ]
+}
